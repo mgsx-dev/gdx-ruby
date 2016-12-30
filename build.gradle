@@ -1,0 +1,33 @@
+apply plugin: 'java'
+
+repositories { 
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+}
+
+
+ext {
+    gdxVersion = '1.9.4'
+}
+
+
+dependencies {
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+}
+
+
+task copyJars << {
+  configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+    project.copy {
+      from artifact.file
+      into "jars"
+      def classifier = artifact.classifier ? "-${artifact.classifier}" : ""
+      rename { "${artifact.name}${classifier}.${artifact.extension}" }
+    }
+    }
+}
+
