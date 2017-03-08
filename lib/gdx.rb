@@ -26,6 +26,8 @@ end
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -121,12 +123,16 @@ module GDX
 	end
 
 	def window(width = nil, height = nil, &block)
+		custom_window(MyApp.new(&block))
+	end
+
+	def custom_window(app, width = nil, height = nil)
 		config = LwjglApplicationConfiguration.new
 		config.width = width if width
 		config.height = height if height
 		config.forceExit = true
 		LwjglApplicationConfiguration.disableAudio = true
-		$game = MyApp.new(&block)
+		$game = app
 		$queue = Queue.new
 		Thread.new{
 			LwjglApplication.new($game, config);
